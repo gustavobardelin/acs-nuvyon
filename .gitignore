@@ -1,0 +1,5 @@
+# Dependências e Compilação
+node_modules/
+dist/
+.next/
+out/

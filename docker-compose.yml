@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: acs-postgres
+    environment:
+      POSTGRES_USER: acs_admin
+      POSTGRES_PASSWORD: acs_password
+      POSTGRES_DB: acs_corporate
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - acs-net
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./acs-backend
+      dockerfile: Dockerfile
+    container_name: acs-backend-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./acs-backend:/app
+      - /app/node_modules
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=acs_admin
+      - DB_PASS=acs_password
+      - DB_NAME=acs_corporate
+      - JWT_SECRET=super_secret_corporate_key_2026
+      - GENIEACS_NBI_URL=http://genieacs-nbi:7557
+      - GENIEACS_TIMEOUT=5000
+      - GENIEACS_USERNAME=admin
+      - GENIEACS_PASSWORD=admin
+    depends_on:
+      - postgres
+    networks:
+      - acs-net
+      - genieacs_network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./acs-frontend
+      dockerfile: Dockerfile
+    container_name: acs-frontend-ui
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./acs-frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://20.206.200.230:3000
+    networks:
+      - acs-net
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+networks:
+  acs-net:
+    driver: bridge
+  genieacs_network:
+    external: true
+    name: genieacs_isp-net
