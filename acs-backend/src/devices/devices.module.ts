@@ -1,11 +1,15 @@
+// acs-backend/src/devices/devices.module.ts
+
 import { Module } from '@nestjs/common';
-import { DevicesService } from './devices.service';
 import { DevicesController } from './devices.controller';
+import { DevicesService } from './devices.service';
 import { GenieACSModule } from '../genieacs/genieacs.module';
+import { DeviceActionsModule } from '../device-actions/device-actions.module';
 
 @Module({
-  imports: [GenieACSModule], // Injeta a comunicação com o motor TR-069
+  imports: [GenieACSModule, DeviceActionsModule],
   controllers: [DevicesController],
   providers: [DevicesService],
+  exports: [DevicesService],
 })
 export class DevicesModule {}

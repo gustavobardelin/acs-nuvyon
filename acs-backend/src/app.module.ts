@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { GenieACSModule } from './genieacs/genieacs.module';
 import { DevicesModule } from './devices/devices.module';
+import { ProvisioningTemplatesModule } from './provisioning-templates/provisioning-templates.module';
+import { DeviceGroupsModule } from './device-groups/device-groups.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { DevicesModule } from './devices/devices.module';
     AuthModule,
     GenieACSModule,
     DevicesModule,
+    ProvisioningTemplatesModule,
+    DeviceGroupsModule,
   ],
   controllers: [],
   providers: [],

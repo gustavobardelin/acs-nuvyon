@@ -1,110 +1,115 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom } from 'rxjs';
-import { AxiosResponse, AxiosError } from 'axios';
-import { GenieACSDevice, GenieACSTaskResponse } from './interfaces/genieacs-response.interface';
+// acs-backend/src/genieacs/genieacs.service.ts
+
+import { Injectable, Logger } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
+
+type GenieAcsTask = Record<string, any>;
+type ParameterValue = [string, any, string];
 
 @Injectable()
 export class GenieACSService {
   private readonly logger = new Logger(GenieACSService.name);
+  private readonly client: AxiosInstance;
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor() {
+    const baseURL =
+      process.env.GENIEACS_NBI_URL?.trim() || 'http://genieacs-nbi:7557';
 
-  async getDevices(query: string = '{}', projection: string = ''): Promise<GenieACSDevice[]> {
-    const url = `/devices/?query=${encodeURIComponent(query)}${projection ? `&projection=${encodeURIComponent(projection)}` : ''}`;
+    const timeout = Number(process.env.GENIEACS_TIMEOUT || 30000);
 
-    const { data } = await firstValueFrom<AxiosResponse<GenieACSDevice[]>>(
-      this.httpService.get<GenieACSDevice[]>(url).pipe(
-        catchError((error: AxiosError) => {
-          this.logger.error(`Erro ao buscar dispositivos no GenieACS: ${error.message}`);
-          throw new InternalServerErrorException('Falha na comunicação com o motor TR-069');
-        }),
-      ),
-    );
+    this.client = axios.create({
+      baseURL,
+      timeout,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    return data;
+    this.logger.log(`GenieACS NBI URL: ${baseURL}`);
+    this.logger.log(`GenieACS timeout: ${timeout}ms`);
   }
 
-  async createTask(deviceId: string, taskName: string, taskArgs: Record<string, any> = {}): Promise<GenieACSTaskResponse> {
-    const payload = {
-      name: taskName,
-      device: deviceId,
-      ...taskArgs,
-    };
+  async getDevices(query = '{}') {
+    const response = await this.client.get('/devices/', {
+      params: {
+        query,
+      },
+    });
 
-    const { data } = await firstValueFrom<AxiosResponse<GenieACSTaskResponse>>(
-      this.httpService.post<GenieACSTaskResponse>('/tasks/', payload).pipe(
-        catchError((error: AxiosError) => {
-          this.logger.error(`Erro ao criar task '${taskName}' para o dispositivo ${deviceId}: ${error.message}`);
-          throw new InternalServerErrorException('Falha ao enfileirar comando no motor de provisionamento');
-        }),
-      ),
-    );
-
-    return data;
+    return response.data;
   }
 
   async rebootDevice(deviceId: string) {
-    try {
-      // O payload para reiniciar o equipamento fisicamente
-      const payload = { name: 'reboot' };
-      const url = `/devices/${encodeURIComponent(deviceId)}/tasks`;
-
-      // Aqui sim o httpService existe e funciona!
-      const response = await this.httpService.axiosRef.post(url, payload);
-      
-      this.logger.log(`Task de REBOOT enfileirada com sucesso para: ${deviceId}`);
-      return response.data;
-      
-    } catch (error: any) {
-      this.logger.error(`Erro ao criar task de reboot: ${error.response?.data || error.message}`);
-      throw error;
-    }
+    return this.createTask(
+      deviceId,
+      {
+        name: 'reboot',
+      },
+      true,
+    );
   }
 
-  async setParameterValues(deviceId: string, parameters: [string, any, string][]) {
-    try {
-      // O payload exige o nome da ação e uma lista de arrays no formato: [caminho, valor, tipo]
-      const payload = {
-        name: 'setParameterValues',
-        parameterValues: parameters
-      };
-      
-      const url = `/devices/${encodeURIComponent(deviceId)}/tasks`;
-      const response = await this.httpService.axiosRef.post(url, payload);
-      
-      this.logger.log(`Task de ESCRITA de Wi-Fi enfileirada para: ${deviceId}`);
-      return response.data;
-      
-    } catch (error: any) {
-      this.logger.error(`Erro ao gravar parâmetros: ${error.response?.data || error.message}`);
-      throw error;
-    }
-  }
-
-  async refreshObject(deviceId: string, objectName: string = '') {
-    try {
-      // O payload agora só precisa saber o que fazer, 
-      // pois quem ele vai afetar já estará na URL
-      const payload = {
+  async refreshObject(deviceId: string, objectName = '') {
+    return this.createTask(
+      deviceId,
+      {
         name: 'refreshObject',
-        objectName: objectName
-      };
+        objectName,
+      },
+      true,
+    );
+  }
 
-      // A URL RESTful correta: /devices/ID/tasks
-      // Usamos encodeURIComponent para proteger o ID que possui caracteres especiais (como %2D)
-      const url = `/devices/${encodeURIComponent(deviceId)}/tasks`;
+  async setParameterValues(
+    deviceId: string,
+    parameterValues: ParameterValue[],
+  ) {
+    return this.createTask(
+      deviceId,
+      {
+        name: 'setParameterValues',
+        parameterValues,
+      },
+      true,
+    );
+  }
 
-      // Faça o envio usando a sua variável HTTP existente 
-      // (ajuste this.httpService.axiosRef para a forma que já está no seu arquivo)
-      const response = await this.httpService.axiosRef.post(url, payload);
-      
-      this.logger.log(`Task de atualização enfileirada com sucesso para: ${deviceId}`);
+  private async createTask(
+    deviceId: string,
+    task: GenieAcsTask,
+    useConnectionRequest = true,
+  ) {
+    const encodedDeviceId = encodeURIComponent(deviceId);
+
+    const path = useConnectionRequest
+      ? `/devices/${encodedDeviceId}/tasks?connection_request`
+      : `/devices/${encodedDeviceId}/tasks`;
+
+    this.logger.log(
+      `Enviando task GenieACS: ${path} | ${JSON.stringify(task)}`,
+    );
+
+    try {
+      const response = await this.client.post(path, task);
+
+      this.logger.log(
+        `Task GenieACS OK: status=${response.status} response=${JSON.stringify(
+          response.data,
+        )}`,
+      );
+
       return response.data;
-      
     } catch (error: any) {
-      // Melhoramos o log para capturar a resposta exata de recusa do GenieACS (error.response.data)
-      this.logger.error(`Erro ao criar task 'refreshObject': ${error.response?.data || error.message}`);
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      const message = error?.message;
+
+      this.logger.error(
+        `Falha task GenieACS: status=${status} message=${message} response=${JSON.stringify(
+          data,
+        )}`,
+      );
+
       throw error;
     }
   }

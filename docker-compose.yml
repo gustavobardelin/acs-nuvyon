@@ -32,7 +32,7 @@ services:
       - DB_NAME=acs_corporate
       - JWT_SECRET=super_secret_corporate_key_2026
       - GENIEACS_NBI_URL=http://genieacs-nbi:7557
-      - GENIEACS_TIMEOUT=5000
+      - GENIEACS_TIMEOUT=30000
       - GENIEACS_USERNAME=admin
       - GENIEACS_PASSWORD=admin
     depends_on:
@@ -54,7 +54,7 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      - NEXT_PUBLIC_API_URL=http://20.206.200.230:3000
+      - NEXT_PUBLIC_API_URL=/api
     networks:
       - acs-net
     restart: unless-stopped
