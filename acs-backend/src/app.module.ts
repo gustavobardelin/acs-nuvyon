@@ -6,6 +6,7 @@ import { GenieACSModule } from './genieacs/genieacs.module';
 import { DevicesModule } from './devices/devices.module';
 import { ProvisioningTemplatesModule } from './provisioning-templates/provisioning-templates.module';
 import { DeviceGroupsModule } from './device-groups/device-groups.module';
+import { ProvisioningJobsModule } from './provisioning-jobs/provisioning-jobs.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DeviceGroupsModule } from './device-groups/device-groups.module';
     DevicesModule,
     ProvisioningTemplatesModule,
     DeviceGroupsModule,
+    ProvisioningJobsModule,
   ],
   controllers: [],
   providers: [],
