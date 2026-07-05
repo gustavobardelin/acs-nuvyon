@@ -17,6 +17,7 @@ import { DeviceModelProfileCard } from '@/components/device/DeviceModelProfileCa
 import { ParameterExplorerCard } from '@/components/device/ParameterExplorerCard';
 import { ParameterSnapshotsCard } from '@/components/device/ParameterSnapshotsCard';
 import { ProvisioningTemplatesCard } from '@/components/device/ProvisioningTemplatesCard';
+import { DeviceTemplateComplianceCard } from '@/components/device/DeviceTemplateComplianceCard';
 import { WifiPasswordField } from '@/components/device/WifiPasswordField';
 import {
   Activity,
