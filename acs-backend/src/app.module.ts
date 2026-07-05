@@ -10,6 +10,7 @@ import { DeviceAlertsModule } from './device-alerts/device-alerts.module';
 import { DeviceMetadataModule } from './device-metadata/device-metadata.module';
 import { DeviceParametersModule } from './device-parameters/device-parameters.module';
 import { DeviceParameterSnapshotsModule } from './device-parameter-snapshots/device-parameter-snapshots.module';
+import { ModelProfilesModule } from './model-profiles/model-profiles.module';
 import { ProvisioningJobsModule } from './provisioning-jobs/provisioning-jobs.module';
 
 @Module({
@@ -41,6 +42,7 @@ import { ProvisioningJobsModule } from './provisioning-jobs/provisioning-jobs.mo
     DeviceMetadataModule,
     DeviceParametersModule,
     DeviceParameterSnapshotsModule,
+    ModelProfilesModule,
     ProvisioningJobsModule,
   ],
   controllers: [],

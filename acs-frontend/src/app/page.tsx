@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Activity,
+  Boxes,
+  BookOpen,
   AlertTriangle,
   Bell,
   CheckCircle,

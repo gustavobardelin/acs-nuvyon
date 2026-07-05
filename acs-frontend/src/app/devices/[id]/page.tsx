@@ -13,6 +13,7 @@ import { DeviceCapabilitiesCard } from '@/components/device/DeviceCapabilitiesCa
 import { ContextualHealthScoreCard } from '@/components/device/ContextualHealthScoreCard';
 import { DeviceActiveAlertsCard } from '@/components/device/DeviceActiveAlertsCard';
 import { DeviceOperationalProfileCard } from '@/components/device/DeviceOperationalProfileCard';
+import { DeviceModelProfileCard } from '@/components/device/DeviceModelProfileCard';
 import { ParameterExplorerCard } from '@/components/device/ParameterExplorerCard';
 import { ParameterSnapshotsCard } from '@/components/device/ParameterSnapshotsCard';
 import { ProvisioningTemplatesCard } from '@/components/device/ProvisioningTemplatesCard';
@@ -767,6 +768,8 @@ export default function DeviceDetailsPage() {
         <ContextualHealthScoreCard device={device} />
 
         <DeviceOperationalProfileCard deviceId={device.id} />
+
+        <DeviceModelProfileCard device={device} />
 
         <DeviceActiveAlertsCard deviceId={device.id} />
 
