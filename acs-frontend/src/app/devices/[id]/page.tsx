@@ -14,6 +14,7 @@ import { ContextualHealthScoreCard } from '@/components/device/ContextualHealthS
 import { DeviceActiveAlertsCard } from '@/components/device/DeviceActiveAlertsCard';
 import { DeviceOperationalProfileCard } from '@/components/device/DeviceOperationalProfileCard';
 import { ParameterExplorerCard } from '@/components/device/ParameterExplorerCard';
+import { ParameterSnapshotsCard } from '@/components/device/ParameterSnapshotsCard';
 import { ProvisioningTemplatesCard } from '@/components/device/ProvisioningTemplatesCard';
 import { WifiPasswordField } from '@/components/device/WifiPasswordField';
 import {
@@ -772,6 +773,8 @@ export default function DeviceDetailsPage() {
         <DeviceCapabilitiesCard capabilities={device.capabilities} />
 
         <ParameterExplorerCard deviceId={device.id} />
+
+        <ParameterSnapshotsCard deviceId={device.id} />
 
         <ProvisioningTemplatesCard
           device={device}
