@@ -1,0 +1,4 @@
+NAME              IMAGE                        COMMAND                  SERVICE    CREATED      STATUS      PORTS
+acs-backend-api   plataforma-nuvyon-backend    "docker-entrypoint.s…"   backend    6 days ago   Up 6 days   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+acs-frontend-ui   plataforma-nuvyon-frontend   "docker-entrypoint.s…"   frontend   6 days ago   Up 6 days   0.0.0.0:3001->3001/tcp, [::]:3001->3001/tcp
+acs-postgres      postgres:15-alpine           "docker-entrypoint.s…"   postgres   7 days ago   Up 7 days   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp

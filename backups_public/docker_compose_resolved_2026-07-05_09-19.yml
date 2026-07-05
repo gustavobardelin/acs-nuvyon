@@ -1,0 +1,95 @@
+name: plataforma-nuvyon
+services:
+  backend:
+    build:
+      context: /home/gustavo/plataforma-nuvyon/acs-backend
+      dockerfile: Dockerfile
+    container_name: acs-backend-api
+    depends_on:
+      postgres:
+        condition: service_started
+        required: true
+    environment:
+      DB_HOST: postgres
+      DB_NAME: acs_corporate
+      DB_PASS: acs_password
+      DB_PORT: "5432"
+      DB_USER: acs_admin
+      GENIEACS_NBI_URL: http://genieacs-nbi:7557
+      GENIEACS_PASSWORD: admin
+      GENIEACS_TIMEOUT: "30000"
+      GENIEACS_USERNAME: admin
+      JWT_SECRET: super_secret_corporate_key_2026
+    networks:
+      acs-net: null
+      genieacs_network: null
+    ports:
+      - mode: ingress
+        target: 3000
+        published: "3000"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /home/gustavo/plataforma-nuvyon/acs-backend
+        target: /app
+        bind: {}
+      - type: volume
+        target: /app/node_modules
+        volume: {}
+  frontend:
+    build:
+      context: /home/gustavo/plataforma-nuvyon/acs-frontend
+      dockerfile: Dockerfile
+    container_name: acs-frontend-ui
+    environment:
+      NEXT_PUBLIC_API_URL: /api
+    networks:
+      acs-net: null
+    ports:
+      - mode: ingress
+        target: 3001
+        published: "3001"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /home/gustavo/plataforma-nuvyon/acs-frontend
+        target: /app
+        bind: {}
+      - type: volume
+        target: /app/node_modules
+        volume: {}
+      - type: volume
+        target: /app/.next
+        volume: {}
+  postgres:
+    container_name: acs-postgres
+    environment:
+      POSTGRES_DB: acs_corporate
+      POSTGRES_PASSWORD: acs_password
+      POSTGRES_USER: acs_admin
+    image: postgres:15-alpine
+    networks:
+      acs-net: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume: {}
+networks:
+  acs-net:
+    name: plataforma-nuvyon_acs-net
+    driver: bridge
+  genieacs_network:
+    name: genieacs_isp-net
+    external: true
+volumes:
+  pgdata:
+    name: plataforma-nuvyon_pgdata

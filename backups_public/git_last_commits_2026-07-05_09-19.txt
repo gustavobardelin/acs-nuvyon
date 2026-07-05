@@ -1,0 +1,5 @@
+08eeb6d feat: add operational alerts health profile and parameter explorer
+d428162 feat: add device groups and provisioning jobs
+f040017 feat: add provisioning templates and device groups
+37d3e36 fix: remove sub-repositório do frontend e adiciona arquivos ao monorepo
+4f45ab1 feat: configuração inicial da plataforma nuvyon e versionamento do ambiente
