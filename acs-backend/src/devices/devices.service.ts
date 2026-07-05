@@ -374,7 +374,7 @@ export class DevicesService {
     );
   }
 
-  private async findRawDeviceById(
+  async findRawDeviceById(
     deviceId: string,
   ): Promise<RawGenieACSDevice> {
     const possibleIds = this.buildPossibleDeviceIds(deviceId);

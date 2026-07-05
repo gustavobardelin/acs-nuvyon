@@ -6,6 +6,9 @@ import { GenieACSModule } from './genieacs/genieacs.module';
 import { DevicesModule } from './devices/devices.module';
 import { ProvisioningTemplatesModule } from './provisioning-templates/provisioning-templates.module';
 import { DeviceGroupsModule } from './device-groups/device-groups.module';
+import { DeviceAlertsModule } from './device-alerts/device-alerts.module';
+import { DeviceMetadataModule } from './device-metadata/device-metadata.module';
+import { DeviceParametersModule } from './device-parameters/device-parameters.module';
 import { ProvisioningJobsModule } from './provisioning-jobs/provisioning-jobs.module';
 
 @Module({
@@ -33,6 +36,9 @@ import { ProvisioningJobsModule } from './provisioning-jobs/provisioning-jobs.mo
     DevicesModule,
     ProvisioningTemplatesModule,
     DeviceGroupsModule,
+    DeviceAlertsModule,
+    DeviceMetadataModule,
+    DeviceParametersModule,
     ProvisioningJobsModule,
   ],
   controllers: [],

@@ -10,6 +10,10 @@ import type { ElementType } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { DeviceActionsTimeline } from '@/components/device/DeviceActionsTimeline';
 import { DeviceCapabilitiesCard } from '@/components/device/DeviceCapabilitiesCard';
+import { ContextualHealthScoreCard } from '@/components/device/ContextualHealthScoreCard';
+import { DeviceActiveAlertsCard } from '@/components/device/DeviceActiveAlertsCard';
+import { DeviceOperationalProfileCard } from '@/components/device/DeviceOperationalProfileCard';
+import { ParameterExplorerCard } from '@/components/device/ParameterExplorerCard';
 import { ProvisioningTemplatesCard } from '@/components/device/ProvisioningTemplatesCard';
 import { WifiPasswordField } from '@/components/device/WifiPasswordField';
 import {
@@ -759,7 +763,15 @@ export default function DeviceDetailsPage() {
           info={device.connectionRequest}
           onNotify={notify}
         />
+        <ContextualHealthScoreCard device={device} />
+
+        <DeviceOperationalProfileCard deviceId={device.id} />
+
+        <DeviceActiveAlertsCard deviceId={device.id} />
+
         <DeviceCapabilitiesCard capabilities={device.capabilities} />
+
+        <ParameterExplorerCard deviceId={device.id} />
 
         <ProvisioningTemplatesCard
           device={device}
