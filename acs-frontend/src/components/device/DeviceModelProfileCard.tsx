@@ -8,6 +8,7 @@ import {
   Loader2,
   Plus,
   RefreshCw,
+  Sparkles,
   XCircle,
 } from 'lucide-react';
 import { api } from '@/lib/api';
@@ -88,7 +89,7 @@ export function DeviceModelProfileCard({
 
   async function createProfileFromDevice() {
     const confirmed = window.confirm(
-      `Criar perfil técnico para ${manufacturer} ${model} (${productClass})?`,
+      `Analisar o CPE e criar perfil técnico sugerido para ${manufacturer} ${model} (${productClass})?`,
     );
 
     if (!confirmed) return;
@@ -96,32 +97,38 @@ export function DeviceModelProfileCard({
     setCreating(true);
 
     try {
+      const suggestionResponse = await api.get<{
+        profile: Partial<ModelProfile>;
+        evidence: {
+          parameterCount: number;
+          foundPaths: string[];
+        };
+      }>('/model-profiles/suggest/from-device', {
+        params: {
+          deviceId: device.id,
+        },
+      });
+
+      const suggestedProfile = suggestionResponse.data.profile;
+
       const response = await api.post<ModelProfile>('/model-profiles', {
-        displayName: [manufacturer, model]
-          .filter((item) => item && item !== '-')
-          .join(' '),
-        manufacturer,
-        model,
-        productClass,
-        rootObject: 'unknown',
+        ...suggestedProfile,
         status: 'draft',
-        parameterMap: {},
-        capabilities: {},
-        recommendedTemplates: [],
-        tags: [manufacturer, model, productClass]
-          .filter((item) => item && item !== '-')
-          .map((item) => item.toLowerCase().replace(/\s+/g, '-')),
-        notes:
-          'Perfil criado a partir da página do CPE. Completar paths conhecidos, capabilities e templates recomendados.',
       });
 
       setProfile(response.data);
-      alert('Perfil de modelo criado como rascunho.');
+
+      alert(
+        `Perfil sugerido criado como rascunho.\n\n` +
+          `Parâmetros analisados: ${suggestionResponse.data.evidence.parameterCount}\n` +
+          `Paths reconhecidos: ${suggestionResponse.data.evidence.foundPaths.length}\n\n` +
+          `Revise na Base de Modelos antes de marcar como ativo.`,
+      );
     } catch (err: any) {
       alert(
         err?.response?.data?.message ||
           err?.message ||
-          'Falha ao criar perfil do modelo.',
+          'Falha ao criar perfil sugerido do modelo.',
       );
     } finally {
       setCreating(false);
@@ -226,9 +233,9 @@ export function DeviceModelProfileCard({
             {creating ? (
               <Loader2 className="animate-spin" size={15} />
             ) : (
-              <Plus size={15} />
+              <Sparkles size={15} />
             )}
-            Criar perfil deste modelo
+            Criar perfil sugerido
           </button>
         </div>
       ) : (

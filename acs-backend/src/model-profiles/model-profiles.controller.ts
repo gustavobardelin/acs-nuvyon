@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -26,6 +27,16 @@ export class ModelProfilesController {
   @Roles(UserRole.ADMIN, UserRole.NOC, UserRole.SUPPORT, UserRole.FIELD_TECH)
   async list(@Query('q') q?: string, @Query('status') status?: string) {
     return this.profilesService.list({ q, status });
+  }
+
+  @Get('suggest/from-device')
+  @Roles(UserRole.ADMIN, UserRole.NOC, UserRole.SUPPORT)
+  async suggestFromDevice(@Query('deviceId') deviceId?: string) {
+    if (!deviceId) {
+      throw new BadRequestException('deviceId é obrigatório.');
+    }
+
+    return this.profilesService.suggestFromDevice(deviceId);
   }
 
   @Get('by-model')
