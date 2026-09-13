@@ -1,0 +1,32 @@
+{
+  "output": {
+    "filePath": "acs-nuvyon-analysis.xml",
+    "style": "xml",
+    "parsableStyle": true,
+    "headerText": "ACS Nuvyon - Snapshot completo do repositório para análise arquitetural",
+    "removeComments": false,
+    "showLineNumbers": true,
+    "truncateBase64": true,
+    "includeEmptyDirectories": false
+  },
+  "ignore": {
+    "customPatterns": [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.git/**",
+      "**/.cache/**",
+      "**/coverage/**",
+      "**/.turbo/**",
+      "**/.pnpm-store/**",
+      "**/logs/**",
+      "**/*.log",
+      "**/.env",
+      "**/.env.*",
+      "!**/.env.example",
+      "**/repomix-output.*",
+      "**/acs-nuvyon-analysis.*"
+    ]
+  }
+}
