@@ -28,9 +28,9 @@ services:
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USER=acs_admin
-      - DB_PASS=acs_password
+      - DB_PASS=${DB_PASS}
       - DB_NAME=acs_corporate
-      - JWT_SECRET=super_secret_corporate_key_2026
+      - JWT_SECRET=${JWT_SECRET}
       - GENIEACS_NBI_URL=http://genieacs-nbi:7557
       - GENIEACS_TIMEOUT=30000
       - GENIEACS_USERNAME=admin
@@ -49,10 +49,6 @@ services:
     container_name: acs-frontend-ui
     ports:
       - "3001:3001"
-    volumes:
-      - ./acs-frontend:/app
-      - /app/node_modules
-      - /app/.next
     environment:
       - NEXT_PUBLIC_API_URL=/api
     networks:

@@ -3,3 +3,6 @@ node_modules/
 dist/
 .next/
 out/
+
+# pnpm local stores
+.pnpm-store/

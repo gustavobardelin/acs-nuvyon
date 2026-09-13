@@ -140,7 +140,7 @@ export default function AlertsPage() {
       setAlerts(alertsResponse.data);
       setSummary(summaryResponse.data);
     } catch (err: any) {
-      alert(
+      window.alert(
         err?.response?.data?.message ||
           err?.message ||
           'Falha ao carregar alertas.',
@@ -199,7 +199,7 @@ export default function AlertsPage() {
 
       await loadAlerts();
     } catch (err: any) {
-      alert(
+      window.alert(
         err?.response?.data?.message ||
           err?.message ||
           'Falha ao atualizar alerta.',

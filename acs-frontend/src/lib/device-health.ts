@@ -166,7 +166,7 @@ export function calculateDeviceHealth(device: AnyDevice): DeviceHealthResult {
 
   const connectionRequestUrl =
     device.connectionRequest?.url ||
-    device.connectionRequest?.connectionRequestUrl ||
+    device.connectionRequest?.url ||
     null;
 
   if ('connectionRequest' in device && !connectionRequestUrl) {

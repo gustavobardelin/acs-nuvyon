@@ -4,10 +4,10 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: [
-    '20.206.200.230',
-    '20.206.200.230:3001',
-    'http://20.206.200.230',
-    'http://20.206.200.230:3001',
+    '34.39.199.91',
+    '34.39.199.91:3001',
+    'http://34.39.199.91',
+    'http://34.39.199.91:3001',
   ],
 
   async rewrites() {

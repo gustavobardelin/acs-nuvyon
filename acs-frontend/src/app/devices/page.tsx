@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { HealthScorePill } from '@/components/device/HealthScorePill';
+import type { DeviceStatus } from '@/types/devices';
 
 type DeviceItem = {
   id: string;
@@ -25,7 +26,7 @@ type DeviceItem = {
   ip?: string;
   lanIp?: string;
   pppoeUsername?: string;
-  status?: 'online' | 'warning' | 'offline' | string;
+  status?: DeviceStatus;
   lastContact?: string | null;
 };
 

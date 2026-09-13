@@ -162,7 +162,7 @@ export default function DashboardPage() {
           device.serialNumber,
           device.ip,
           device.lanIp,
-          device.pppoeUsername,
+          device.pppoe,
           device.status,
         ]
           .filter(Boolean)

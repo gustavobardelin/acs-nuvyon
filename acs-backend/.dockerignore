@@ -1,4 +1,16 @@
 node_modules
-npm-debug.log
 dist
+coverage
 .git
+.gitignore
+Dockerfile
+.env
+.env.*
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+*.log
+*.tsbuildinfo
+.vscode
+.idea
+.DS_Store

@@ -117,7 +117,7 @@ export function BulkApplyTemplateModal({
 
     try {
       const response = await api.post<BulkPreviewResponse>(
-        `/provisioning-templates/${template.id}/apply-bulk`,
+        template ? `/provisioning-templates/${template.id}/apply-bulk` : '',
         buildPayload(true),
       );
 
@@ -134,7 +134,9 @@ export function BulkApplyTemplateModal({
   }
 
   async function applyBulk() {
-    if (!preview || preview.devices.length === 0) {
+      if (!template)      return;
+
+      if (!preview || preview.devices.length === 0) {
       alert('Faça a prévia antes e confirme se existem dispositivos.');
       return;
     }
@@ -143,13 +145,13 @@ export function BulkApplyTemplateModal({
       `Aplicar "${template.name}" em ${preview.devices.length} dispositivo(s)?`,
     );
 
-    if (!confirmed) return;
+    if (!confirmed)      return;
 
     setApplying(true);
 
     try {
       const response = await api.post<BulkApplyResponse>(
-        `/provisioning-templates/${template.id}/apply-bulk`,
+        template ? `/provisioning-templates/${template.id}/apply-bulk` : '',
         buildPayload(false),
       );
 

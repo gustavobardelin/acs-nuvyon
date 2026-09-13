@@ -43,7 +43,6 @@ export function ContextualHealthScoreCard({
     <HealthScoreCard
       device={{
         ...device,
-        operationalMode: metadata?.operationalMode || 'unknown',
       }}
     />
   );
